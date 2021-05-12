@@ -23,6 +23,7 @@ T_LBS = 26 # target label
 DB_NUM = 26
 model_path = 'model-18'
 im_folder = '/media/nas2/misl_image_db_clean/Canon PowerShot G10/1/'
+output_folder = './results/WindowShift/'
 patch_size = 256
 
 def quadra_generator(im_folder, ext='jpg'):
@@ -101,7 +102,14 @@ with tf.Session() as sess:
         shift_labels = sess.run(pred_labels, feed_dict={image_ph: new_patch[np.newaxis, ...].astype(np.float32)})
         
         print(shift_labels)
-
-
-
+        
+        # write to result folder
+        output_name = str(ii) + '_org_' + '_'.join([str(label) for label in org_preds]) +\
+            '_new_' + '_'.join([str(label) for label in new_labels]) + '_shift_' + str(shift_labels[0]) + '.png'
+        output_image = np.zeros((patch_size * 2, patch_size * 2, 3))
+        output_image[:patch_size, :patch_size] = attacked_images[0]
+        output_image[:patch_size, patch_size:] = attacked_images[1]
+        output_image[patch_size:, :patch_size] = attacked_images[2]
+        output_image[patch_size:, patch_size:] = attacked_images[3]
+        cv2.imwrite(output_folder + output_name, output_image)
     

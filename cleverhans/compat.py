@@ -86,7 +86,7 @@ def MSE_loss(sentinel=None,
              dim=-1):
   
   if sentinel is not None:
-    name = "NSE loss"
+    name = "MSE loss"
     raise ValueError("Only call `%s` with "
                      "named arguments (labels=..., logits=..., ...)"
                      % name)
